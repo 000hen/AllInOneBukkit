@@ -4,17 +4,22 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class ListMenu implements Listener {
@@ -70,28 +75,30 @@ public class ListMenu implements Listener {
                 String creator;
 
                 if (player == null) creator = "未知創建者";
-                else creator = playerId.equals(playerUid) ? "您" : player.getDisplayName();
+                else creator = playerId.equals(playerUid) ? "您" : player.getName();
 
                 ItemStack item = new ItemStack(Material.MAP);
                 ItemMeta meta = item.getItemMeta();
 
-                meta.setDisplayName((playerId.equals(playerUid) ? ChatColor.LIGHT_PURPLE : "") + name);
-                List<String> lore = Arrays.asList(
-                        String.format("創建者: %s", creator),
-                        String.format("世界: %s", _locations.get(world)),
-                        String.format("座標點: (%s, %s, %s)", x, y, z)
-                );
+                TextComponent metaName = Component.text(name)
+                        .color(TextColor.color(playerId.equals(playerUid) ? 0xFF55FF : 0xFFFFFF));
+                meta.displayName(metaName);
 
-                meta.setLore(lore);
+                List<TextComponent> lore = Arrays.asList(
+                        Component.text(String.format("創建者: %s", creator)),
+                        Component.text(String.format("世界: %s", _locations.get(world))),
+                        Component.text(String.format("座標點: (%s, %s, %s)", x, y, z))
+                );
+                meta.lore(lore);
                 item.setItemMeta(meta);
 
                 items.add(new GuiItem(item, event -> {
                     event.setCancelled(true);
                     _player.closeInventory();
 
-                    Utils.showMessageToPlayer(_player, String.format(
+                    Utils.showMessageToPlayer(_player, Component.text(String.format(
                             "標記點 %s 在 %s 的 (%s, %s, %s)",
-                            name, _locations.get(world), x, y, z), "通知");
+                            name, _locations.get(world), x, y, z)), "通知");
                 }));
             }
 
@@ -101,7 +108,7 @@ public class ListMenu implements Listener {
             _menu.addPane(_pages);
         } catch (SQLException exception) {
             exception.printStackTrace();
-            Utils.showErrorMessageToPlayer(_player, "無法查詢座標！請協助回報錯誤");
+            Utils.showErrorMessageToPlayer(_player, Component.text("無法查詢座標！請協助回報錯誤"));
         }
     }
 
@@ -110,7 +117,7 @@ public class ListMenu implements Listener {
 
         ItemStack blackGlass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta blackGlassMeta = blackGlass.getItemMeta();
-        blackGlassMeta.setDisplayName("　");
+        blackGlassMeta.displayName(Component.text("　"));
         blackGlass.setItemMeta(blackGlassMeta);
 
         bar.fillWith(blackGlass);
@@ -121,7 +128,7 @@ public class ListMenu implements Listener {
         ItemStack arrow = new ItemStack(Material.ARROW);
         ItemMeta meta = arrow.getItemMeta();
 
-        meta.setDisplayName("上一頁");
+        meta.displayName(Component.text("上一頁"));
         arrow.setItemMeta(meta);
 
         navigation.addItem(new GuiItem(arrow.clone(), event -> {
@@ -133,7 +140,7 @@ public class ListMenu implements Listener {
             }
         }), 0, 0);
 
-        meta.setDisplayName("下一頁");
+        meta.displayName(Component.text("下一頁"));
         arrow.setItemMeta(meta);
 
         navigation.addItem(new GuiItem(arrow, event -> {
@@ -147,7 +154,7 @@ public class ListMenu implements Listener {
 
         ItemStack exit = new ItemStack(Material.DARK_OAK_DOOR);
         ItemMeta exitMeta = arrow.getItemMeta();
-        exitMeta.setDisplayName("關閉");
+        exitMeta.displayName(Component.text("關閉"));
         exit.setItemMeta(exitMeta);
 
         navigation.addItem(new GuiItem(exit, event ->

@@ -1,34 +1,96 @@
 package one.muisnowdevs.minecraft.allinone;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
 public class Utils {
-    private static void sendMessageToPlayer(String method, String message, Player player) {
-        player.sendMessage(String.format("%s %s", method, message));
+    private static void sendMessageToPlayer(TextComponent method, TextComponent message, Player player) {
+        TextComponent finalMessage = Component.text()
+                .append(method)
+                .append(message)
+                .build();
+        player.sendMessage(finalMessage);
     }
 
-    public static void showErrorMessageToPlayer(Player player, String message) {
-        sendMessageToPlayer(ChatColor.RED + "[error]" + ChatColor.RESET, message, player);
+    public static void showErrorMessageToPlayer(Player player, TextComponent message) {
+        sendMessageToPlayer(
+                titleTag("錯誤", TextColor.color(0xFF55555)),
+                message,
+                player
+        );
     }
 
-    public static void showErrorMessageToPlayer(Player player, String message, String errorType) {
-        sendMessageToPlayer(String.format(ChatColor.RED + "[%s]" + ChatColor.RESET, errorType), message, player);
+    public static void showErrorMessageToPlayer(Player player, TextComponent message, String errorType) {
+        sendMessageToPlayer(
+                titleTag(errorType, TextColor.color(0xFF55555)),
+                message,
+                player
+        );
     }
 
-    public static void showSuccessMessageToPlayer(Player player, String message) {
-        sendMessageToPlayer(ChatColor.GREEN + "[success]" + ChatColor.RESET, message, player);
+    public static void showSuccessMessageToPlayer(Player player, TextComponent message) {
+        sendMessageToPlayer(
+                titleTag("成功", TextColor.color(0x55FF55)),
+                message,
+                player
+        );
     }
 
-    public static void showSuccessMessageToPlayer(Player player, String message, String successType) {
-        sendMessageToPlayer(String.format(ChatColor.GREEN + "[%s]" + ChatColor.RESET, successType), message, player);
+    public static void showSuccessMessageToPlayer(Player player, TextComponent message, String successType) {
+        sendMessageToPlayer(
+                titleTag(successType, TextColor.color(0x55FF55)),
+                message,
+                player
+        );
     }
 
-    public static void showMessageToPlayer(Player player, String message) {
-        sendMessageToPlayer(ChatColor.AQUA + "[info]" + ChatColor.RESET, message, player);
+    public static void showMessageToPlayer(Player player, TextComponent message) {
+        sendMessageToPlayer(
+                titleTag("系統通知", TextColor.color(0x55FFFF)),
+                message,
+                player
+        );
     }
 
-    public static void showMessageToPlayer(Player player, String message, String messageType) {
-        sendMessageToPlayer(String.format(ChatColor.AQUA + "[%s]" + ChatColor.RESET, messageType), message, player);
+    public static void showMessageToPlayer(Player player, TextComponent message, String messageType) {
+        sendMessageToPlayer(
+                titleTag(messageType, TextColor.color(0x55FFFF)),
+                message,
+                player
+        );
+    }
+
+    public static TextComponent commandComponent(String command) {
+        return Component.text()
+                .append(Component.text(" "))
+                .append(Component.text(command))
+                .append(Component.text(" "))
+                .color(TextColor.color(0xFFFF55))
+                .clickEvent(ClickEvent.suggestCommand(command))
+                .hoverEvent(HoverEvent.showText(Component.text("點選使用指令")))
+                .build();
+    }
+
+    public static TextComponent playerComponent(Player player) {
+        return Component.text()
+                .append(Component.text(" "))
+                .append(Component.text(player.getName()))
+                .append(Component.text(" "))
+                .color(TextColor.color(0xFFFF55))
+                .build();
+    }
+
+    public static TextComponent titleTag(String text, TextColor color) {
+        return Component.text()
+                .append(Component.text("["))
+                .append(Component.text(text))
+                .append(Component.text("]"))
+                .append(Component.text(" "))
+                .color(color)
+                .build();
     }
 }

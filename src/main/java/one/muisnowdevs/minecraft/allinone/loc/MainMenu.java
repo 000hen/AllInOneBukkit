@@ -3,6 +3,7 @@ package one.muisnowdevs.minecraft.allinone.loc;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
+import net.kyori.adventure.text.Component;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class MainMenu implements Listener {
     private void createNewLocation() {
         ItemStack map = new ItemStack(Material.MAP);
         ItemMeta beaconMeta = map.getItemMeta();
-        beaconMeta.setDisplayName("建立新座標");
+        beaconMeta.displayName(Component.text("建立新座標"));
         map.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(map, event -> {
@@ -52,7 +53,7 @@ public class MainMenu implements Listener {
     private void removeLocation() {
         ItemStack barrier = new ItemStack(Material.BARRIER);
         ItemMeta beaconMeta = barrier.getItemMeta();
-        beaconMeta.setDisplayName("刪除已建立的座標");
+        beaconMeta.displayName(Component.text("刪除已建立的座標"));
         barrier.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(barrier, event -> _player.sendMessage("remove location")));
@@ -61,7 +62,7 @@ public class MainMenu implements Listener {
     private void searchLocation() {
         ItemStack glass = new ItemStack(Material.SPYGLASS);
         ItemMeta beaconMeta = glass.getItemMeta();
-        beaconMeta.setDisplayName("查詢已建立的座標");
+        beaconMeta.displayName(Component.text("查詢已建立的座標"));
         glass.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(glass, event -> {
@@ -73,7 +74,7 @@ public class MainMenu implements Listener {
     private void listLocation() {
         ItemStack paper = new ItemStack(Material.PAPER);
         ItemMeta beaconMeta = paper.getItemMeta();
-        beaconMeta.setDisplayName("所有已建立的座標");
+        beaconMeta.displayName(Component.text("所有已建立的座標"));
         paper.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(paper, event -> {
@@ -85,7 +86,7 @@ public class MainMenu implements Listener {
     private void closeMenu() {
         ItemStack paper = new ItemStack(Material.DARK_OAK_DOOR);
         ItemMeta beaconMeta = paper.getItemMeta();
-        beaconMeta.setDisplayName("關閉選單");
+        beaconMeta.displayName(Component.text("關閉選單"));
         paper.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(paper, event -> _player.closeInventory()));

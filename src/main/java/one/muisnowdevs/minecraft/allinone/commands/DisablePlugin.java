@@ -1,8 +1,9 @@
 package one.muisnowdevs.minecraft.allinone.commands;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import one.muisnowdevs.minecraft.allinone.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,10 +30,15 @@ public class DisablePlugin implements CommandExecutor {
         logger.info(String.format("Plugin is disabled by player %s", player.getDisplayName()));
         Bukkit.getPluginManager().disablePlugin(_plugin);
 
+        TextComponent fullCommandMessage = Component.text()
+                .append(Component.text("插件已成功禁用，使用 "))
+                .append(Utils.commandComponent("/reload"))
+                .append(Component.text(" 來重新啟用。"))
+                .build();
+
         Utils.showMessageToPlayer(
                 player,
-                String.format("插件已成功禁用，使用 %s 來重新啟用。",
-                        ChatColor.YELLOW + "/reload" + ChatColor.RESET),
+                fullCommandMessage,
                 "AllInOne");
 
         return true;

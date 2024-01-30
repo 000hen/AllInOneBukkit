@@ -12,3 +12,7 @@ commands:
   unloc:
     description: Disable AllInOne plugin
     usage: /<command>
+
+  "allinone:callback":
+    description: Callback function
+    usage: /<command> <UUID>

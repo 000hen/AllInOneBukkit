@@ -3,6 +3,7 @@ package one.muisnowdevs.minecraft.allinone.loc;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import net.kyori.adventure.text.Component;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.Utils;
 import org.bukkit.Location;
@@ -47,7 +48,7 @@ public class CreateMenu {
 
         ItemStack res = new ItemStack(Material.MAP);
         ItemMeta resMeta = res.getItemMeta();
-        resMeta.setDisplayName("儲存地點");
+        resMeta.displayName(Component.text("儲存地點"));
         res.setItemMeta(resMeta);
 
         nav.addItem(new GuiItem(res, event -> handleSave()), 0, 0);
@@ -60,7 +61,7 @@ public class CreateMenu {
 
         ItemStack map = new ItemStack(Material.MAP);
         ItemMeta meta = map.getItemMeta();
-        meta.setDisplayName("新地點");
+        meta.displayName(Component.text("新地點"));
         map.setItemMeta(meta);
 
         nav.addItem(new GuiItem(map, event -> event.setCancelled(true)), 0, 0);
@@ -84,12 +85,12 @@ public class CreateMenu {
             state.setInt(6, location.getBlockZ());
             state.executeUpdate();
 
-            Utils.showSuccessMessageToPlayer(_player, String.format("已成功建立 %s 的座標點！", _locationName), "建立成功");
+            Utils.showSuccessMessageToPlayer(_player, Component.text(String.format("已成功建立 %s 的座標點！", _locationName)), "建立成功");
 
             state.close();
         } catch (SQLException exception) {
             exception.printStackTrace();
-            Utils.showErrorMessageToPlayer(_player, "無法建立座標！請協助回報錯誤");
+            Utils.showErrorMessageToPlayer(_player, Component.text("無法建立座標！請協助回報錯誤"));
         }
     }
 }
