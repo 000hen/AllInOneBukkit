@@ -31,9 +31,9 @@ public class DisablePlugin implements CommandExecutor {
         Bukkit.getPluginManager().disablePlugin(_plugin);
 
         TextComponent fullCommandMessage = Component.text()
-                .append(Component.text("插件已成功禁用，使用 "))
+                .append(Component.text("插件已成功禁用，使用"))
                 .append(Utils.commandComponent("/reload"))
-                .append(Component.text(" 來重新啟用。"))
+                .append(Component.text("來重新啟用。"))
                 .build();
 
         Utils.showMessageToPlayer(

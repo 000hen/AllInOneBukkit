@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.Utils;
 import one.muisnowdevs.minecraft.allinone.loc.CreateMenu;
@@ -18,15 +18,32 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class PlayerLocation implements CommandExecutor {
     private final AllInOne _plugin;
     private final HashMap<UUID, Player> _playerWaitTP = new HashMap<>();
+    private final HashMap<UUID, Integer> _tpTimesStorage = new HashMap<>();
 
     public PlayerLocation(AllInOne plugin) {
         this._plugin = plugin;
+
+        // Schedule a clear job
+        Calendar calendar = Calendar.getInstance();
+        long now = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.DATE, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long offset = calendar.getTimeInMillis() - now;
+        long tick = offset / 50L;
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(_plugin, _tpTimesStorage::clear, tick, 1728000L);
     }
 
     @Override
@@ -36,7 +53,7 @@ public class PlayerLocation implements CommandExecutor {
         Player player = (Player) commandSender;
 
         if (strings.length == 0) {
-            new MainMenu(_plugin, player);
+            new MainMenu(_plugin, this, player);
             return true;
         }
 
@@ -46,7 +63,7 @@ public class PlayerLocation implements CommandExecutor {
                 break;
 
             case "list":
-                new ListMenu(_plugin, player);
+                new ListMenu(_plugin, this, player);
                 break;
 
             case "search":
@@ -63,12 +80,12 @@ public class PlayerLocation implements CommandExecutor {
                 _playerWaitTP.put(player.getUniqueId(), playerMentioned);
 
                 TextComponent cancel = Component.text(" [拒絕] ")
-                        .color(TextColor.color(0xFF5555))
+                        .color(NamedTextColor.RED)
                         .clickEvent(ClickEvent.callback(event -> cancelAction(player)))
                         .hoverEvent(HoverEvent.showText(Component.text("拒絕玩家的提案")));
 
                 TextComponent allow = Component.text(" [允許] ")
-                        .color(TextColor.color(0x55FF55))
+                        .color(NamedTextColor.GREEN)
                         .clickEvent(ClickEvent.callback(event -> allowAction(player)))
                         .hoverEvent(HoverEvent.showText(Component.text("接受玩家的提案")));
 
@@ -109,5 +126,13 @@ public class PlayerLocation implements CommandExecutor {
 
         Utils.showSuccessMessageToPlayer(player, Component.text("玩家已同意傳送"), "同意傳送");
         player.teleport(playerMentionedLocation);
+    }
+
+    private void resetStorage() {
+
+    }
+
+    public HashMap<UUID, Integer> getTPStorage() {
+        return this._tpTimesStorage;
     }
 }

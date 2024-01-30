@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,7 @@ public class Utils {
 
     public static void showErrorMessageToPlayer(Player player, TextComponent message) {
         sendMessageToPlayer(
-                titleTag("錯誤", TextColor.color(0xFF55555)),
+                titleTag("錯誤", NamedTextColor.RED),
                 message,
                 player
         );
@@ -26,7 +27,7 @@ public class Utils {
 
     public static void showErrorMessageToPlayer(Player player, TextComponent message, String errorType) {
         sendMessageToPlayer(
-                titleTag(errorType, TextColor.color(0xFF55555)),
+                titleTag(errorType, NamedTextColor.RED),
                 message,
                 player
         );
@@ -34,7 +35,7 @@ public class Utils {
 
     public static void showSuccessMessageToPlayer(Player player, TextComponent message) {
         sendMessageToPlayer(
-                titleTag("成功", TextColor.color(0x55FF55)),
+                titleTag("成功", NamedTextColor.GREEN),
                 message,
                 player
         );
@@ -42,7 +43,7 @@ public class Utils {
 
     public static void showSuccessMessageToPlayer(Player player, TextComponent message, String successType) {
         sendMessageToPlayer(
-                titleTag(successType, TextColor.color(0x55FF55)),
+                titleTag(successType, NamedTextColor.GREEN),
                 message,
                 player
         );
@@ -50,7 +51,7 @@ public class Utils {
 
     public static void showMessageToPlayer(Player player, TextComponent message) {
         sendMessageToPlayer(
-                titleTag("系統通知", TextColor.color(0x55FFFF)),
+                titleTag("系統通知", NamedTextColor.AQUA),
                 message,
                 player
         );
@@ -58,7 +59,7 @@ public class Utils {
 
     public static void showMessageToPlayer(Player player, TextComponent message, String messageType) {
         sendMessageToPlayer(
-                titleTag(messageType, TextColor.color(0x55FFFF)),
+                titleTag(messageType, NamedTextColor.AQUA),
                 message,
                 player
         );
@@ -69,7 +70,7 @@ public class Utils {
                 .append(Component.text(" "))
                 .append(Component.text(command))
                 .append(Component.text(" "))
-                .color(TextColor.color(0xFFFF55))
+                .color(NamedTextColor.YELLOW)
                 .clickEvent(ClickEvent.suggestCommand(command))
                 .hoverEvent(HoverEvent.showText(Component.text("點選使用指令")))
                 .build();
@@ -80,7 +81,7 @@ public class Utils {
                 .append(Component.text(" "))
                 .append(Component.text(player.getName()))
                 .append(Component.text(" "))
-                .color(TextColor.color(0xFFFF55))
+                .color(NamedTextColor.YELLOW)
                 .build();
     }
 

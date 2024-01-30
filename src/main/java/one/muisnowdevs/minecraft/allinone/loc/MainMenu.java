@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import net.kyori.adventure.text.Component;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
+import one.muisnowdevs.minecraft.allinone.commands.PlayerLocation;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -14,13 +15,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class MainMenu implements Listener {
     private final Player _player;
     private final AllInOne _plugin;
+    private final PlayerLocation _commander;
     private final OutlinePane _navigation = new OutlinePane(2, 1, 5, 1);
 
-    public MainMenu(AllInOne plugin, Player player) {
+    public MainMenu(AllInOne plugin, PlayerLocation commander, Player player) {
         super();
 
         _plugin = plugin;
         _player = player;
+        _commander = commander;
 
         ChestGui menu = menuBuilder();
 
@@ -45,7 +48,7 @@ public class MainMenu implements Listener {
         map.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(map, event -> {
-            _player.sendMessage("create new location");
+            event.setCancelled(true);
             new CreateMenu(_plugin, _player);
         }));
     }
@@ -56,7 +59,9 @@ public class MainMenu implements Listener {
         beaconMeta.displayName(Component.text("刪除已建立的座標"));
         barrier.setItemMeta(beaconMeta);
 
-        _navigation.addItem(new GuiItem(barrier, event -> _player.sendMessage("remove location")));
+        _navigation.addItem(new GuiItem(barrier, event -> {
+            event.setCancelled(true);
+        }));
     }
 
     private void searchLocation() {
@@ -66,7 +71,7 @@ public class MainMenu implements Listener {
         glass.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(glass, event -> {
-            _player.sendMessage("search location");
+            event.setCancelled(true);
             new SearchMenu(_plugin, _player);
         }));
     }
@@ -78,8 +83,8 @@ public class MainMenu implements Listener {
         paper.setItemMeta(beaconMeta);
 
         _navigation.addItem(new GuiItem(paper, event -> {
-            _player.sendMessage("list location");
-            new ListMenu(_plugin, _player);
+            event.setCancelled(true);
+            new ListMenu(_plugin, _commander, _player);
         }));
     }
 
@@ -89,6 +94,9 @@ public class MainMenu implements Listener {
         beaconMeta.displayName(Component.text("關閉選單"));
         paper.setItemMeta(beaconMeta);
 
-        _navigation.addItem(new GuiItem(paper, event -> _player.closeInventory()));
+        _navigation.addItem(new GuiItem(paper, event -> {
+            event.setCancelled(true);
+            _player.closeInventory();
+        }));
     }
 }
