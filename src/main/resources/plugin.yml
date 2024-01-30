@@ -7,12 +7,8 @@ database: true
 commands:
   loc:
     description: 建立與查看玩家們所建立的座標點位
-    usage: /<command> [create|remove|list|search]
+    usage: /<command> [ create | remove | list | search | <player> ]
 
   unloc:
     description: Disable AllInOne plugin
     usage: /<command>
-
-  "allinone:callback":
-    description: Callback function
-    usage: /<command> <UUID>
