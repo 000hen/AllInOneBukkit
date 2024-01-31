@@ -132,6 +132,8 @@ public class PlayerLocation implements CommandExecutor {
 
         Utils.showSuccessMessageToPlayer(player, Component.text("玩家已同意傳送"), "同意傳送");
         player.teleport(playerMentionedLocation);
+
+        _playerWaitTP.remove(player.getUniqueId());
     }
 
     public HashMap<UUID, Integer> getTPStorage() {
