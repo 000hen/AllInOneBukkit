@@ -8,7 +8,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class Utils {
+    public static final HashMap<String, String> locations = new HashMap<String, String>() {{
+        put("world", "主世界");
+        put("world_nether", "地獄");
+        put("world_the_end", "終界");
+    }};
+
     private static void sendMessageToPlayer(TextComponent method, TextComponent message, Player player) {
         TextComponent finalMessage = Component.text()
                 .append(method)

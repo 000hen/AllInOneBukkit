@@ -61,6 +61,7 @@ public class MainMenu implements Listener {
 
         _navigation.addItem(new GuiItem(barrier, event -> {
             event.setCancelled(true);
+            new RemoveMenu(_plugin, _player);
         }));
     }
 
@@ -72,7 +73,7 @@ public class MainMenu implements Listener {
 
         _navigation.addItem(new GuiItem(glass, event -> {
             event.setCancelled(true);
-            new SearchMenu(_plugin, _player);
+            new SearchMenu(_plugin, _commander, _player);
         }));
     }
 

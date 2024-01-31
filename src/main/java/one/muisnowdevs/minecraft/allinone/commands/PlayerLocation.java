@@ -7,10 +7,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.Utils;
-import one.muisnowdevs.minecraft.allinone.loc.CreateMenu;
-import one.muisnowdevs.minecraft.allinone.loc.ListMenu;
-import one.muisnowdevs.minecraft.allinone.loc.MainMenu;
-import one.muisnowdevs.minecraft.allinone.loc.SearchMenu;
+import one.muisnowdevs.minecraft.allinone.loc.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -21,6 +18,9 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerLocation implements CommandExecutor {
     private final AllInOne _plugin;
@@ -67,10 +67,11 @@ public class PlayerLocation implements CommandExecutor {
                 break;
 
             case "search":
-                new SearchMenu(_plugin, player);
+                new SearchMenu(_plugin, this, player);
                 break;
 
             case "remove":
+                new RemoveMenu(_plugin, player);
                 break;
 
             default:
@@ -102,6 +103,11 @@ public class PlayerLocation implements CommandExecutor {
 
                 Utils.showMessageToPlayer(playerMentioned, message);
                 playerMentioned.sendMessage(finalChoiceMessage);
+
+                Utils.showMessageToPlayer(player, Component.text("已發送傳送請求，正在等待對方回應。"));
+
+                ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+                exec.schedule(() -> cancelAction(player), 1, TimeUnit.MINUTES);
         }
 
         return true;
@@ -126,10 +132,6 @@ public class PlayerLocation implements CommandExecutor {
 
         Utils.showSuccessMessageToPlayer(player, Component.text("玩家已同意傳送"), "同意傳送");
         player.teleport(playerMentionedLocation);
-    }
-
-    private void resetStorage() {
-
     }
 
     public HashMap<UUID, Integer> getTPStorage() {

@@ -4,25 +4,26 @@ import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
+import one.muisnowdevs.minecraft.allinone.commands.PlayerLocation;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.PluginBase;
 
 public class SearchMenu {
     private final Player _player;
     private final AllInOne _plugin;
-    private final AnvilGui _menu;
+    private final PlayerLocation _commander;
     private String _locationName;
 
-    public SearchMenu(AllInOne plugin, Player player) {
+    public SearchMenu(AllInOne plugin, PlayerLocation commander, Player player) {
         super();
 
         _plugin = plugin;
         _player = player;
+        _commander = commander;
 
-        _menu = menuBuilder();
+        AnvilGui _menu = menuBuilder();
         _menu.show(_player);
     }
 
@@ -32,10 +33,7 @@ public class SearchMenu {
         gui.getFirstItemComponent().addPane(getFirstItem());
         gui.getResultComponent().addPane(getResultItem());
 
-        gui.setOnNameInputChanged(newName -> {
-            _locationName = newName;
-            _player.sendMessage(newName);
-        });
+        gui.setOnNameInputChanged(newName -> _locationName = newName);
         gui.setCost((short) 0);
 
         return gui;
@@ -49,7 +47,10 @@ public class SearchMenu {
         resMeta.setDisplayName("查詢");
         res.setItemMeta(resMeta);
 
-        nav.addItem(new GuiItem(res, event -> _player.closeInventory()), 0, 0);
+        nav.addItem(new GuiItem(res, event -> {
+            event.setCancelled(true);
+            new ListMenu(_plugin, _commander, _player, _locationName);
+        }), 0, 0);
 
         return nav;
     }

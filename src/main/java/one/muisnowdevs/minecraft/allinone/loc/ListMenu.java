@@ -32,12 +32,6 @@ public class ListMenu {
     private final PlayerLocation _commander;
     private final PaginatedPane _pages = new PaginatedPane(0, 0, 9, 4);
 
-    private final HashMap<String, String> _locations = new HashMap<String, String>() {{
-        put("world", "主世界");
-        put("world_nether", "地獄");
-        put("world_the_end", "終界");
-    }};
-
     private ChestGui _menu;
 
     public ListMenu(AllInOne plugin, PlayerLocation commander, Player player, String searchParams) {
@@ -115,7 +109,7 @@ public class ListMenu {
 
                 List<TextComponent> lore = Arrays.asList(
                         Component.text(String.format("創建者: %s", creator)),
-                        Component.text(String.format("世界: %s", _locations.get(world))),
+                        Component.text(String.format("世界: %s", Utils.locations.get(world))),
                         Component.text(String.format("座標點: (%s, %s, %s)", x, y, z)),
                         Component.text("　"),
                         Component.text()
@@ -180,7 +174,7 @@ public class ListMenu {
                                 Component.text()
                                         .append(Component.text("已傳送至"))
                                         .append(Component.text(" "))
-                                        .append(Component.text(_locations.get(world)).color(NamedTextColor.YELLOW))
+                                        .append(Component.text(Utils.locations.get(world)).color(NamedTextColor.YELLOW))
                                         .append(Component.text(" "))
                                         .append(Component.text("的"))
                                         .append(Component.text(" "))
@@ -198,8 +192,7 @@ public class ListMenu {
                     if (event.isRightClick()) {
                         Utils.showMessageToPlayer(_player, Component.text(String.format(
                                 "標記點 %s 在 %s 的 (%s, %s, %s)",
-                                name, _locations.get(world), x, y, z)), "通知");
-                        return;
+                                name, Utils.locations.get(world), x, y, z)), "通知");
                     }
                 }));
             }
@@ -217,12 +210,13 @@ public class ListMenu {
     private void addNavigation() {
         StaticPane bar = new StaticPane(0, 4, 9, 1);
 
-        ItemStack blackGlass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack blackGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta blackGlassMeta = blackGlass.getItemMeta();
         blackGlassMeta.displayName(Component.text("　"));
         blackGlass.setItemMeta(blackGlassMeta);
 
         bar.fillWith(blackGlass);
+        bar.setOnClick(event -> event.setCancelled(true));
         _menu.addPane(bar);
 
         StaticPane navigation = new StaticPane(0, 5, 9, 1);
