@@ -217,6 +217,8 @@ public class RemoveMenu {
 
             statement.close();
             Utils.showSuccessMessageToPlayer(_player, Component.text("已刪除座標點！"), "刪除成功");
+
+            _canRemove = false;
         } catch (SQLException exception) {
             exception.printStackTrace();
             Utils.showErrorMessageToPlayer(_player, Component.text("無法刪除座標！請協助回報錯誤"));
