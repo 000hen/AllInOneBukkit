@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayerLocation implements CommandExecutor {
     private final AllInOne _plugin;
-    private final HashMap<UUID, Player> _playerWaitTP = new HashMap<>();
+    private final HashMap<UUID, IPlayerTeleport> _playerWaitTP = new HashMap<>();
     private final HashMap<UUID, Integer> _tpTimesStorage = new HashMap<>();
 
     public PlayerLocation(AllInOne plugin) {
@@ -78,16 +78,28 @@ public class PlayerLocation implements CommandExecutor {
                 Player playerMentioned = Bukkit.getPlayer(strings[0]);
                 if (playerMentioned == null) return false;
 
-                _playerWaitTP.put(player.getUniqueId(), playerMentioned);
+                UUID sessionUUID = UUID.randomUUID();
+
+                _playerWaitTP.put(sessionUUID, new IPlayerTeleport() {
+                    @Override
+                    public Player getPlayer() {
+                        return player;
+                    }
+
+                    @Override
+                    public Player getPlayerMentioned() {
+                        return playerMentioned;
+                    }
+                });
 
                 TextComponent cancel = Component.text(" [拒絕] ")
                         .color(NamedTextColor.RED)
-                        .clickEvent(ClickEvent.callback(event -> cancelAction(player)))
+                        .clickEvent(ClickEvent.callback(event -> cancelAction(sessionUUID)))
                         .hoverEvent(HoverEvent.showText(Component.text("拒絕玩家的提案")));
 
                 TextComponent allow = Component.text(" [允許] ")
                         .color(NamedTextColor.GREEN)
-                        .clickEvent(ClickEvent.callback(event -> allowAction(player)))
+                        .clickEvent(ClickEvent.callback(event -> allowAction(sessionUUID)))
                         .hoverEvent(HoverEvent.showText(Component.text("接受玩家的提案")));
 
                 TextComponent message = Component.text()
@@ -107,33 +119,33 @@ public class PlayerLocation implements CommandExecutor {
                 Utils.showMessageToPlayer(player, Component.text("已發送傳送請求，正在等待對方回應。"));
 
                 ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-                exec.schedule(() -> cancelAction(player), 1, TimeUnit.MINUTES);
+                exec.schedule(() -> cancelAction(sessionUUID), 1, TimeUnit.MINUTES);
         }
 
         return true;
     }
 
-    private void cancelAction(Player player) {
-        Player mentioned = _playerWaitTP.get(player.getUniqueId());
-        if (mentioned == null) return;
+    private void cancelAction(UUID sessionUUID) {
+        IPlayerTeleport teleportObject = _playerWaitTP.get(sessionUUID);
+        if (teleportObject == null) return;
 
-        Utils.showMessageToPlayer(mentioned, Component.text("您已拒絕傳送請求"));
+        Utils.showMessageToPlayer(teleportObject.getPlayerMentioned(), Component.text("您已拒絕傳送請求"));
 
-        _playerWaitTP.remove(player.getUniqueId());
-        Utils.showErrorMessageToPlayer(player, Component.text("玩家拒絕傳送"), "拒絕傳送");
+        _playerWaitTP.remove(sessionUUID);
+        Utils.showErrorMessageToPlayer(teleportObject.getPlayer(), Component.text("玩家拒絕傳送"), "拒絕傳送");
     }
 
-    private void allowAction(Player player) {
-        Player playerMentioned = _playerWaitTP.get(player.getUniqueId());
-        if (playerMentioned == null) return;
+    private void allowAction(UUID sessionUUID) {
+        IPlayerTeleport teleportObject = _playerWaitTP.get(sessionUUID);
+        if (teleportObject == null) return;
 
-        Utils.showMessageToPlayer(playerMentioned, Component.text("您已允許傳送請求，玩家將會被傳送至您的位置。"));
-        Location playerMentionedLocation = playerMentioned.getLocation();
+        Utils.showMessageToPlayer(teleportObject.getPlayerMentioned(), Component.text("您已允許傳送請求，玩家將會被傳送至您的位置。"));
+        Location playerMentionedLocation = teleportObject.getPlayerMentioned().getLocation();
 
-        Utils.showSuccessMessageToPlayer(player, Component.text("玩家已同意傳送"), "同意傳送");
-        player.teleport(playerMentionedLocation);
+        Utils.showSuccessMessageToPlayer(teleportObject.getPlayer(), Component.text("玩家已同意傳送"), "同意傳送");
+        teleportObject.getPlayer().teleport(playerMentionedLocation);
 
-        _playerWaitTP.remove(player.getUniqueId());
+        _playerWaitTP.remove(sessionUUID);
     }
 
     public HashMap<UUID, Integer> getTPStorage() {
