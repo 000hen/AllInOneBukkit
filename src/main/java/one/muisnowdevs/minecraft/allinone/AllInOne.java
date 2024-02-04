@@ -3,6 +3,7 @@ package one.muisnowdevs.minecraft.allinone;
 import one.muisnowdevs.minecraft.allinone.commands.DisablePlugin;
 import one.muisnowdevs.minecraft.allinone.commands.PlayerLocation;
 import one.muisnowdevs.minecraft.allinone.database.SQLConnection;
+import one.muisnowdevs.minecraft.allinone.events.ItemGarbageTruck;
 import one.muisnowdevs.minecraft.allinone.events.PlayerDeathPunish;
 import one.muisnowdevs.minecraft.allinone.events.PlayerJoinMessage;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,6 +47,7 @@ public final class AllInOne extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new PlayerJoinMessage(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeathPunish(), this);
+        new ItemGarbageTruck(this);
 
         logger.info("Event mounted!");
         logger.info("Mounting Commands...");
