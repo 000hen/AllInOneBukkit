@@ -8,6 +8,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.entity.Player;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Utils {
@@ -81,6 +83,24 @@ public class Utils {
                 .color(NamedTextColor.YELLOW)
                 .clickEvent(ClickEvent.suggestCommand(command))
                 .hoverEvent(HoverEvent.showText(Component.text("點選使用指令")))
+                .build();
+    }
+
+    public static TextComponent linkComponent(String _url) {
+        URL url = null;
+        try {
+            url = new URL(_url);
+        } catch (MalformedURLException exception) {
+            exception.printStackTrace();
+        }
+
+        return Component.text()
+                .append(Component.text(" "))
+                .append(Component.text(String.format("%s%s", url.getHost(), url.getPath())))
+                .append(Component.text(" "))
+                .color(NamedTextColor.YELLOW)
+                .clickEvent(ClickEvent.openUrl(url))
+                .hoverEvent(HoverEvent.showText(Component.text("點選開啟連結")))
                 .build();
     }
 

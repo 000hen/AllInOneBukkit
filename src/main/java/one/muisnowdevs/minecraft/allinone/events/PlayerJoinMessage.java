@@ -49,6 +49,11 @@ public class PlayerJoinMessage implements Listener {
                     .append(Component.text("使用"))
                     .append(Utils.commandComponent("/loc <player>"))
                     .append(Component.text("指令傳送至玩家旁！"))
+                    .build(),
+            Component.text()
+                    .append(Component.text("看不懂指令怎麼用？立即上"))
+                    .append(Utils.linkComponent("https://allinone.muisnow.dev/usage/commands"))
+                    .append(Component.text("查看指令的使用方法！"))
                     .build()
     };
 
