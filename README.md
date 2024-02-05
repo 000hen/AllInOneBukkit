@@ -12,3 +12,4 @@ This plugin including following features:
 * Location Point (including teleport)
 * Player to Player Teleportation
 * Death Punishment
+* Garbage Trunk system (Dropped item remove system)
