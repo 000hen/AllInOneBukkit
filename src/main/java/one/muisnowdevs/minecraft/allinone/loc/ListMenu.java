@@ -32,6 +32,8 @@ public class ListMenu {
     private final PlayerLocation _commander;
     private final PaginatedPane _pages = new PaginatedPane(0, 0, 9, 4);
 
+    private final int _teleportLimit;
+
     private ChestGui _menu;
 
     public ListMenu(AllInOne plugin, PlayerLocation commander, Player player, String searchParams) {
@@ -41,6 +43,8 @@ public class ListMenu {
         _plugin = plugin;
         _search = searchParams;
         _commander = commander;
+
+        _teleportLimit = _plugin.getConfig().getInt("teleportLimit");
 
         this.showMenu();
     }
@@ -52,6 +56,8 @@ public class ListMenu {
         _plugin = plugin;
         _commander = commander;
         _search = null;
+
+        _teleportLimit = _plugin.getConfig().getInt("teleportLimit");
 
         this.showMenu();
     }
@@ -145,7 +151,7 @@ public class ListMenu {
                         if (times == null) {
                             storage.put(playerUUID, 1);
                             times = 1;
-                        } else if (times == 3) {
+                        } else if (times == _teleportLimit) {
                             Utils.showErrorMessageToPlayer(_player, Component.text("您的傳送次數已達上限，今天無法再次使用這個功能！"), "次數上限");
                             return;
                         } else {
@@ -164,7 +170,7 @@ public class ListMenu {
                                 Component.text()
                                         .append(Component.text("您今天還剩下"))
                                         .append(Component.text(" "))
-                                        .append(Component.text(String.format("%o次", 3 - times)).color(NamedTextColor.YELLOW))
+                                        .append(Component.text(String.format("%o次", _teleportLimit - times)).color(NamedTextColor.YELLOW))
                                         .append(Component.text(" "))
                                         .append(Component.text("的傳送機會"))
                                         .build());
@@ -264,7 +270,7 @@ public class ListMenu {
         timesMeta.displayName(Component.text()
                 .append(Component.text("傳送剩餘次數:"))
                 .append(Component.text(" "))
-                .append(Component.text(String.format("%o次", 3 - timesUsed))
+                .append(Component.text(String.format("%o次", _teleportLimit - timesUsed))
                         .color(NamedTextColor.YELLOW)
                         .decoration(TextDecoration.BOLD, true))
                 .build());

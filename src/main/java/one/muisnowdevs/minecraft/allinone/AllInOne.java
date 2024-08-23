@@ -18,26 +18,14 @@ import java.util.logging.Logger;
 public final class AllInOne extends JavaPlugin {
 
     private final Logger logger = getLogger();
-    private final FileConfiguration _config = getConfig();
     private Connection _database;
 
     @Override
     public void onEnable() {
         logger.info("Plugin Enabled!");
 
-        _config.addDefault(
-                "sqlUrl",
-                String.format(
-                        "jdbc:sqlite:%s",
-                        Paths.get(getDataFolder().getPath(), "database.db")
-                )
-        );
-
-        try {
-            _config.save(Paths.get(getDataFolder().getPath(), "config.yaml").toFile());
-        } catch (IOException e) {
-            logger.info("Cannot write config. Using default config instead.");
-        }
+        saveResource("config.yml", false);
+        saveDefaultConfig();
 
         logger.info("Database initializing...");
         initDatabase();
@@ -69,7 +57,11 @@ public final class AllInOne extends JavaPlugin {
 
     private void initDatabase() {
         try {
-            SQLConnection sql = new SQLConnection(_config.get("sqlUrl").toString());
+            String path = getConfig().getString("sqlUrl");
+            SQLConnection sql = new SQLConnection(path == null ? String.format(
+                    "jdbc:sqlite:%s",
+                    Paths.get(getDataFolder().getPath(), "database.db")
+            ) : path);
             _database = sql.getDatabase();
         } catch (SQLException e) {
             throw new RuntimeException(e);
