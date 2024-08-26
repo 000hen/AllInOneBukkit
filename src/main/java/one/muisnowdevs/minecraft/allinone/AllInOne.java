@@ -34,7 +34,7 @@ public final class AllInOne extends JavaPlugin {
         logger.info("Mounting Events...");
 
         this.getServer().getPluginManager().registerEvents(new PlayerJoinMessage(), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerDeathPunish(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerDeathPunish(this), this);
         new ItemGarbageTruck(this);
 
         logger.info("Event mounted!");

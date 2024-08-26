@@ -1,7 +1,7 @@
 name: AllInOne
 version: '${project.version}'
 main: one.muisnowdevs.minecraft.allinone.AllInOne
-api-version: 1.20
+api-version: 1.21.1
 database: true
 
 commands:

@@ -2,9 +2,10 @@ package one.muisnowdevs.minecraft.allinone.events;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import one.muisnowdevs.minecraft.allinone.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,20 +16,20 @@ import java.util.Random;
 
 public class PlayerJoinMessage implements Listener {
     public static final String[] joinMessages = {
-            "讓我們歡迎 %s 的加入！",
-            "玩家 %s 已加入！",
-            "%s 剛剛跳入了伺服器！",
-            "很高興見到你 %s",
-            "你知道嗎？ %s 加入了！",
-            "欸！看到了嗎？ %s 加入了！",
-            "忽有龐然大物，拔山倒樹而來，蓋一 %s 也"
+            "讓我們歡迎 <user> 的加入！",
+            "玩家 <user> 已加入！",
+            "<user> 剛剛跳入了伺服器！",
+            "很高興見到你 <user>",
+            "你知道嗎？ <user> 加入了！",
+            "欸！看到了嗎？ <user> 加入了！",
+            "忽有龐然大物，拔山倒樹而來，蓋一 <user> 也"
     };
     public static final String[] leaveMessage = {
-            "啊啦！ %s 離開了伺服器呢！",
-            "%s 消失了！",
-            "WTF！ %s 怎麼離開了？",
-            "さよなら！ %s",
-            "%s 離開了我們的視線！"
+            "啊啦！ <user> 離開了伺服器呢！",
+            "<user> 消失了！",
+            "WTF！ <user> 怎麼離開了？",
+            "さよなら！ <user>",
+            "<user> 離開了我們的視線！"
     };
     public static final TextComponent[] tips = {
             Component.text()
@@ -61,12 +62,19 @@ public class PlayerJoinMessage implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        String player_name = player.getDisplayName();
+        String player_name = player.getName();
 
-        event.setJoinMessage(String.format(
-                "%s %s",
-                ChatColor.AQUA + "[玩家加入]" + ChatColor.RESET,
-                String.format(this.getRandomMessage(joinMessages), ChatColor.YELLOW + player_name + ChatColor.RESET)));
+        Component message = MiniMessage.miniMessage()
+                .deserialize(
+                        this.getRandomMessage(joinMessages),
+                        Placeholder.component("user",
+                                Component.text(player_name)
+                                        .color(NamedTextColor.YELLOW)
+                        )
+                );
+
+        event.joinMessage(
+                Utils.messageWithHeader(Utils.titleTag("玩家加入", NamedTextColor.AQUA), (TextComponent) message));
 
         Utils.showMessageToPlayer(
                 player,
@@ -77,12 +85,19 @@ public class PlayerJoinMessage implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        String player_name = player.getDisplayName();
+        String player_name = player.getName();
 
-        event.setQuitMessage(String.format(
-                "%s %s",
-                ChatColor.GOLD + "[玩家離開]" + ChatColor.RESET,
-                String.format(this.getRandomMessage(leaveMessage), ChatColor.YELLOW + player_name + ChatColor.RESET)));
+        Component message = MiniMessage.miniMessage()
+                .deserialize(
+                        this.getRandomMessage(leaveMessage),
+                        Placeholder.component("user",
+                                Component.text(player_name)
+                                        .color(NamedTextColor.YELLOW)
+                        )
+                );
+
+        event.quitMessage(
+                Utils.messageWithHeader(Utils.titleTag("玩家加入", NamedTextColor.GOLD), (TextComponent) message));
     }
 
     private String getRandomMessage(String[] message) {

@@ -14,6 +14,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -47,10 +48,8 @@ public class PlayerLocation implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!(commandSender instanceof Player)) return false;
-
-        Player player = (Player) commandSender;
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
+        if (!(commandSender instanceof Player player)) return false;
 
         if (strings.length == 0) {
             new MainMenu(_plugin, this, player);

@@ -27,17 +27,13 @@ public class ItemGarbageTruck {
     }
 
     private void notifyEvent(Times time) {
-        String timeString = null;
+        String timeString = switch (time) {
+            case ONE_MINUTE -> "1";
+            case TEN_MINUTE -> "10";
+        };
 
-        switch (time) {
-            case ONE_MINUTE:
-                timeString = "1";
-                break;
-
-            case TEN_MINUTE:
-                timeString = "10";
-                break;
-        }
+        if (_plugin.getServer().getOnlinePlayers().isEmpty())
+            return;
 
         _plugin.getServer().sendMessage(Component.text()
                 .append(Utils.titleTag("垃圾車", NamedTextColor.AQUA))
@@ -46,6 +42,9 @@ public class ItemGarbageTruck {
     }
 
     private void clearEvent() {
+        if (_plugin.getServer().getOnlinePlayers().isEmpty())
+            return;
+
         _plugin.getServer().sendMessage(Component.text()
                 .append(Utils.titleTag("垃圾車", NamedTextColor.AQUA))
                 .append(Component.text("正在從所有世界回收掉落物..."))

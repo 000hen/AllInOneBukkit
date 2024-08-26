@@ -20,11 +20,14 @@ public class Utils {
     }};
 
     private static void sendMessageToPlayer(TextComponent method, TextComponent message, Player player) {
-        TextComponent finalMessage = Component.text()
-                .append(method)
+        player.sendMessage(messageWithHeader(method, message));
+    }
+
+    public static TextComponent messageWithHeader(TextComponent header, TextComponent message) {
+        return Component.text()
+                .append(header)
                 .append(message)
                 .build();
-        player.sendMessage(finalMessage);
     }
 
     public static void showErrorMessageToPlayer(Player player, TextComponent message) {

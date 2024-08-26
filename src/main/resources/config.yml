@@ -1,2 +1,3 @@
 sqlUrl:
 teleportLimit: 5
+deadPunishment: true
