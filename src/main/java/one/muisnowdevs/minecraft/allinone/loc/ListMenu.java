@@ -32,7 +32,7 @@ public class ListMenu {
     private final PlayerLocation _commander;
     private final PaginatedPane _pages = new PaginatedPane(0, 0, 9, 4);
 
-    private final int _teleportLimit;
+    private final Integer _teleportLimit;
 
     private ChestGui _menu;
 
@@ -145,24 +145,25 @@ public class ListMenu {
                     event.setCancelled(true);
                     _player.closeInventory();
 
+                    Location location = new Location(
+                            Bukkit.getWorld(world),
+                            Double.parseDouble(x),
+                            Double.parseDouble(y),
+                            Double.parseDouble(z));
+
                     if (event.isLeftClick()) {
                         HashMap<UUID, Integer> storage = _commander.getTPStorage();
                         Integer times = storage.get(playerUUID);
                         if (times == null) {
                             storage.put(playerUUID, 1);
                             times = 1;
-                        } else if (times == _teleportLimit) {
+                        } else if (times.equals(_teleportLimit)) {
                             Utils.showErrorMessageToPlayer(_player, Component.text("您的傳送次數已達上限，今天無法再次使用這個功能！"), "次數上限");
                             return;
                         } else {
                             storage.replace(playerUUID, ++times);
                         }
 
-                        Location location = new Location(
-                                Bukkit.getWorld(world),
-                                Double.parseDouble(x),
-                                Double.parseDouble(y),
-                                Double.parseDouble(z));
                         _player.teleport(location);
 
                         Utils.showMessageToPlayer(
@@ -170,7 +171,7 @@ public class ListMenu {
                                 Component.text()
                                         .append(Component.text("您今天還剩下"))
                                         .append(Component.text(" "))
-                                        .append(Component.text(String.format("%o次", _teleportLimit - times)).color(NamedTextColor.YELLOW))
+                                        .append(Component.text(String.format("%d次", _teleportLimit - times)).color(NamedTextColor.YELLOW))
                                         .append(Component.text(" "))
                                         .append(Component.text("的傳送機會"))
                                         .build());
@@ -179,26 +180,19 @@ public class ListMenu {
                                 _player,
                                 Component.text()
                                         .append(Component.text("已傳送至"))
-                                        .append(Component.text(" "))
-                                        .append(Component.text(Utils.locations.get(world)).color(NamedTextColor.YELLOW))
-                                        .append(Component.text(" "))
-                                        .append(Component.text("的"))
-                                        .append(Component.text(" "))
-                                        .append(Component.text()
-                                                .append(Component.text(name))
-                                                .append(Component.text(" "))
-                                                .append(Component.text(String.format("(%s, %s, %s)", x, y, z)))
-                                                .color(NamedTextColor.YELLOW)
-                                                .build())
+                                        .append(Utils.formatLocation(location))
                                         .build(),
                                 "傳送成功");
                         return;
                     }
 
                     if (event.isRightClick()) {
-                        Utils.showMessageToPlayer(_player, Component.text(String.format(
-                                "標記點 %s 在 %s 的 (%s, %s, %s)",
-                                name, Utils.locations.get(world), x, y, z)), "通知");
+                        Utils.showMessageToPlayer(_player, Component.text()
+                                .append(Component.text("標記點"))
+                                .append(Component.text(String.format(" %s ", name)).color(NamedTextColor.YELLOW))
+                                .append(Component.text("在"))
+                                .append(Utils.formatLocation(location))
+                                .build(), "通知");
                     }
                 }));
             }
@@ -261,16 +255,14 @@ public class ListMenu {
         navigation.addItem(new GuiItem(exit, event ->
                 _player.closeInventory()), 4, 0);
 
-
-        Integer timesUsed = _commander.getTPStorage().get(_player.getUniqueId());
-        if (timesUsed == null) timesUsed = 0;
+        Integer timesUsed = Optional.ofNullable(_commander.getTPStorage().get(_player.getUniqueId())).orElse(0);
 
         ItemStack times = new ItemStack(Material.ENDER_PEARL);
         ItemMeta timesMeta = times.getItemMeta();
         timesMeta.displayName(Component.text()
                 .append(Component.text("傳送剩餘次數:"))
                 .append(Component.text(" "))
-                .append(Component.text(String.format("%o次", _teleportLimit - timesUsed))
+                .append(Component.text(String.format("%d次", _teleportLimit - timesUsed))
                         .color(NamedTextColor.YELLOW)
                         .decoration(TextDecoration.BOLD, true))
                 .build());

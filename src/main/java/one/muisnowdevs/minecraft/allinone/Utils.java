@@ -6,6 +6,8 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.net.MalformedURLException;
@@ -123,6 +125,19 @@ public class Utils {
                 .append(Component.text("]"))
                 .append(Component.text(" "))
                 .color(color)
+                .build();
+    }
+
+    public static TextComponent formatLocation(Location location) {
+        return Component.text()
+                .append(Component.text(String.format(" %s ", locations.get(location.getWorld().getName())))
+                        .color(NamedTextColor.YELLOW))
+                .append(Component.text("的"))
+                .append(Component.text(String.format(" (%s, %s, %s) ",
+                        location.getBlockX(),
+                        location.getBlockY(),
+                        location.getBlockZ()))
+                        .color(NamedTextColor.YELLOW))
                 .build();
     }
 }

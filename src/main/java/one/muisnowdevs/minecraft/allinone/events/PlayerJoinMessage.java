@@ -97,7 +97,7 @@ public class PlayerJoinMessage implements Listener {
                 );
 
         event.quitMessage(
-                Utils.messageWithHeader(Utils.titleTag("玩家加入", NamedTextColor.GOLD), (TextComponent) message));
+                Utils.messageWithHeader(Utils.titleTag("玩家離開", NamedTextColor.GOLD), (TextComponent) message));
     }
 
     private String getRandomMessage(String[] message) {

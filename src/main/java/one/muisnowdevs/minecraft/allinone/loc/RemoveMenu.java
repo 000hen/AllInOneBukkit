@@ -12,6 +12,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -112,18 +114,19 @@ public class RemoveMenu {
                     _player.closeInventory();
 
                     if (event.isLeftClick()) {
+                        Location location = new Location(
+                                Bukkit.getWorld(world),
+                                Double.parseDouble(x),
+                                Double.parseDouble(y),
+                                Double.parseDouble(z));
+
                         Utils.showMessageToPlayer(_player, Component.text()
                                 .append(Component.text("您即將刪除座標點"))
                                 .append(Component.text(" "))
                                 .append(Component.text(name))
                                 .append(Component.text(" "))
                                 .append(Component.text("是位於"))
-                                .append(Component.text(" "))
-                                .append(Component.text(Utils.locations.get(world)).color(NamedTextColor.YELLOW))
-                                .append(Component.text(" "))
-                                .append(Component.text("的"))
-                                .append(Component.text(" "))
-                                .append(Component.text(String.format("(%s, %s, %s)", x, y, z)).color(NamedTextColor.YELLOW))
+                                .append(Utils.formatLocation(location))
                                 .build());
                         Utils.showErrorMessageToPlayer(_player, Component.text()
                                 .append(Component.text("為了避免您錯誤的刪除該座標，請再次點擊"))

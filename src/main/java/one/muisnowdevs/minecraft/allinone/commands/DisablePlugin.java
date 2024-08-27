@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ public class DisablePlugin implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] strings) {
         if (!commandSender.isOp()) return false;
 
         Player player = (Player) commandSender;

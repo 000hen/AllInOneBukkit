@@ -3,6 +3,7 @@ package one.muisnowdevs.minecraft.allinone.loc;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.AnvilGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import net.kyori.adventure.text.Component;
 import one.muisnowdevs.minecraft.allinone.AllInOne;
 import one.muisnowdevs.minecraft.allinone.commands.PlayerLocation;
 import org.bukkit.Material;
@@ -44,7 +45,7 @@ public class SearchMenu {
 
         ItemStack res = new ItemStack(Material.SPYGLASS);
         ItemMeta resMeta = res.getItemMeta();
-        resMeta.setDisplayName("查詢");
+        resMeta.displayName(Component.text("查詢"));
         res.setItemMeta(resMeta);
 
         nav.addItem(new GuiItem(res, event -> {
@@ -60,7 +61,7 @@ public class SearchMenu {
 
         ItemStack map = new ItemStack(Material.MAP);
         ItemMeta meta = map.getItemMeta();
-        meta.setDisplayName("輸入查詢的地點");
+        meta.displayName(Component.text("輸入查詢的地點"));
         map.setItemMeta(meta);
 
         nav.addItem(new GuiItem(map, event -> event.setCancelled(true)), 0, 0);

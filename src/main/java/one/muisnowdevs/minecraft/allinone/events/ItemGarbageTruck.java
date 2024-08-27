@@ -62,7 +62,7 @@ public class ItemGarbageTruck {
 
         _plugin.getServer().sendMessage(Component.text()
                 .append(Utils.titleTag("垃圾車", NamedTextColor.AQUA))
-                .append(Component.text(String.format("回收成功 %o 件垃圾！世界變得一片祥和了！", entityCount[0])))
+                .append(Component.text(String.format("回收成功 %d 件垃圾！世界變得一片祥和了！", entityCount[0])))
                 .build());
     }
 }

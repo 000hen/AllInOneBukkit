@@ -51,7 +51,7 @@ public class PlayerDeathPunish implements Listener {
                 player.setTotalExperience(playerExp - declineExp);
                 player.setLevel(playerExpLevel - declineExpLevel);
 
-                Utils.showErrorMessageToPlayer(player, Component.text(String.format("您被扣除 %o 經驗點，與 %o 經驗等級", declineExp, declineExpLevel)), "死亡懲罰");
+                Utils.showErrorMessageToPlayer(player, Component.text(String.format("您被扣除 %d 經驗點，與 %d 經驗等級", declineExp, declineExpLevel)), "死亡懲罰");
                 return;
 
             case 2:

@@ -9,6 +9,10 @@ commands:
     description: 建立與查看玩家們所建立的座標點位
     usage: /<command> [ create | remove | list | search | <player> ]
 
+  back:
+    description: 返回上次死亡的地點 (需要支付 20 經驗等級)
+    usage: /<command>
+
   unloc:
     description: Disable AllInOne plugin
     usage: /<command>
